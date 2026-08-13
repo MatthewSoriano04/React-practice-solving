@@ -1,4 +1,4 @@
-# React Practice
+# React Challenge 1
 
 React mini e-commerce application built by following Brian Jenney’s junior developer interview coding challenge/video. Demonstrates API fetching, product rendering, cart management, quantity controls, conditional rendering, derived state, and product search using React.
 
