@@ -7,8 +7,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
-  const [viewed, setViewed] = useState(false);
-  const [viewUser, setviewUser] = useState([]);
+  const [viewUser, setViewUser] = useState(null);
+  const totalUsers = users.length;
 
   const searchUser = users.filter((user) => {
     const query = search.toLowerCase();
@@ -19,9 +19,15 @@ function App() {
     )
   });
 
-  const deleteUser = users.map((user) => {
+  const visibleUsers = searchUser.length;
 
-  })
+  function deleteUser(user) {
+    const updatedUsers = users.filter((userItem) => {
+      return userItem.id !== user.id;
+    })
+    setUsers(updatedUsers);
+  }
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -32,16 +38,6 @@ function App() {
     }
     fetchUsers();
   },[]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await fetch("https://jsonplaceholder.typicode.com/users");
-      const data = await response.json();
-      setUsers(data);
-    };
-
-    fetchUsers();
-  }, []);
 
   return (
     <div>
@@ -69,22 +65,22 @@ function App() {
             <td>{user.email}</td>
             <td>
               <button onClick={() => {
-                setviewUser(user);
-                setViewed(true);
-                console.log(user);
+                setViewUser(user);
               }}>
               View Details
               </button>
-              <button>Delete</button>
+              <button onClick={() => deleteUser(user)}>
+                Delete
+              </button>
             </td>
           </tr>
           ))}
           <tr>
             <td colSpan="4">
-              {viewed ? 
+              {viewUser ? 
                 (
                   <div>
-                    <button onClick={() => setViewed(false)}>Close</button>
+                    <button onClick={() => setViewUser(null)}>Close</button>
                     <div>Name: {viewUser.name}</div>
                     <div>Username: {viewUser.username}</div>
                     <div>Email: {viewUser.email}</div>
@@ -95,6 +91,11 @@ function App() {
                 : 
                 ("Select a user to view details")
               }
+            </td>
+          </tr>
+          <tr>
+            <td colSpan="4">
+              Total Users: {totalUsers} | Visible Users: {visibleUsers}
             </td>
           </tr>
         </tbody>
