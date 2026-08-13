@@ -31,13 +31,33 @@ function App() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await fetch("https://jsonplaceholder.typicode.com/users");
-      const data = await response.json();
-      setUsers(data);
-      console.log(data);
+      try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/users");
+        if (!response.ok) {
+          throw new Error("Network response failed");
+        }
+
+        const data = await response.json();
+        setUsers(data);
+      }
+
+      catch (error) {
+        setError(error)
+
+      } finally {
+        setLoading(false);
+      }
     }
     fetchUsers();
   },[]);
+
+  if (loading) {
+    return <h1>Loading...</h1>
+  }
+
+  if (error) {
+    return <h1>{error.message}</h1>
+  }
 
   return (
     <div>
